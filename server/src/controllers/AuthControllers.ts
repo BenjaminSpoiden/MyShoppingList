@@ -33,5 +33,13 @@ export const createUser = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
     const {email, password} = req.body
 
-    
+    try {
+        const user = await User.onLogin(email, password)  
+
+        const token = createToken(user.uuid)
+        res.cookie("jwt-cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
+        res.status(200).send(`${user.email} is now connected.`)
+    }catch(e) {
+        res.status(400).send(e.message)
+    }
 }

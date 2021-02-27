@@ -30,4 +30,15 @@ export class User extends BaseEntity {
     async onHashPassword() {
         this.password = await argon2.hash(this.password)
     }
+
+    static async onLogin(email: string, password: string) {
+
+        const user = await this.findOne({ email })
+        if(!user) throw Error("Wrong email.")
+
+        const comparePassword = await argon2.verify(user.password, password)
+        if(!comparePassword) throw Error("Wrong password.") 
+
+        return user
+    }
 }
