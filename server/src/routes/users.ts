@@ -4,7 +4,6 @@ import { deleteUser, getUser, getUsers, updateUser } from "../controllers/UserCo
 
 const router = express.Router()
 
-
 router.get("/", getUsers)
 
 router.get("/:id", getUser)

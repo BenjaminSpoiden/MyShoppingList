@@ -4,6 +4,7 @@ import bodyParser from "body-parser"
 import usersRoutes from "./routes/users"
 import AuthRoutes from "./routes/Auth"
 import { createConnection } from "typeorm"
+import cookieParser from "cookie-parser"
 
 const PORT = 4000
 
@@ -13,6 +14,7 @@ const main = async() => {
     await createConnection()
 
     app.use(bodyParser.json())
+    app.use(cookieParser())
 
     app.use("/users", usersRoutes)
     app.use(AuthRoutes)
