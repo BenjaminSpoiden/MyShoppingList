@@ -4,7 +4,6 @@ import bodyParser from "body-parser"
 import usersRoutes from "./routes/users"
 import AuthRoutes from "./routes/Auth"
 import { createConnection } from "typeorm"
-import { User } from "./entity/User";
 
 const PORT = 4000
 
@@ -18,7 +17,7 @@ const main = async() => {
     app.use("/users", usersRoutes)
     app.use(AuthRoutes)
 
-    app.get("/", (req, res) => {
+    app.get("/", (_, res) => {
         
         res.send("Hello server")
     })

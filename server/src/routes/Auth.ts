@@ -1,22 +1,9 @@
 import { Router } from "express"
-import { User } from "../entity/User"
+import { createUser } from "../controllers/AuthControllers"
 
 const router = Router()
 
-router.post("/signup", async (req, res) => {
-    const {email, password} = req.body
-
-    try {
-        const user = await User.create({email, password}).save()
-        console.log(user)
-
-        res.status(201).send("User created")
-    }catch (e) {
-        console.log(e.message)
-        res.status(400).send(e)
-    }
-   
-})
+router.post("/signup", createUser)
 router.post("/login", (req, res) => {
     res.send(req.body)
 })
