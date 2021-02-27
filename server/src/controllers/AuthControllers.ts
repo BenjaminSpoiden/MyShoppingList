@@ -1,6 +1,6 @@
 import { validate } from "class-validator";
 import { User } from "../entity/User";
-import { Request, Response} from "express"
+import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 
 const createToken = (id: string) => {
@@ -20,7 +20,7 @@ export const createUser = async (req: Request, res: Response) => {
         }else {
             await user.save()
             const token = createToken(user.uuid)
-            res.cookie("jwt-cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
+            res.cookie("jwt_cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
         }
         
         res.status(201).send("User created")
@@ -37,9 +37,13 @@ export const loginUser = async (req: Request, res: Response) => {
         const user = await User.onLogin(email, password)  
 
         const token = createToken(user.uuid)
-        res.cookie("jwt-cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
+        res.cookie("jwt_cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
         res.status(200).send(`${user.email} is now connected.`)
     }catch(e) {
         res.status(400).send(e.message)
     }
+}
+
+export const logoutUser = async (_: Request, res: Response) => {
+    res.clearCookie("jwt_cookie").status(200).send("Cookie cleared")
 }

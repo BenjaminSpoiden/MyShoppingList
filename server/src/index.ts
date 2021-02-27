@@ -5,6 +5,7 @@ import usersRoutes from "./routes/users"
 import AuthRoutes from "./routes/Auth"
 import { createConnection } from "typeorm"
 import cookieParser from "cookie-parser"
+import { currentUser } from "./middleware/AuthMiddleware";
 
 const PORT = 4000
 
@@ -19,8 +20,10 @@ const main = async() => {
     app.use("/users", usersRoutes)
     app.use(AuthRoutes)
 
+
+    app.get("*", currentUser)
     app.get("/", (_, res) => {
-        
+        console.log("current User: ", res.locals.user)
         res.send("Hello server")
     })
 
