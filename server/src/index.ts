@@ -5,7 +5,7 @@ import usersRoutes from "./routes/users"
 import AuthRoutes from "./routes/Auth"
 import { createConnection } from "typeorm"
 import cookieParser from "cookie-parser"
-import { currentUser } from "./middleware/AuthMiddleware";
+import { currentUser, requireAuth } from "./middleware/AuthMiddleware";
 
 const PORT = 4000
 
@@ -23,8 +23,12 @@ const main = async() => {
 
     app.get("*", currentUser)
     app.get("/", (_, res) => {
-        console.log("current User: ", res.locals.user)
         res.send("Hello server")
+    })
+
+    app.get("/list", requireAuth, (_, res) => {
+        
+        res.send(res.locals.user)
     })
 
     app.listen(PORT, () => {
