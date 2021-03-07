@@ -3,8 +3,9 @@ import { User } from "../entity/User";
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 
-const createToken = (id: string) => {
-    return jwt.sign({ id }, 'secret cookie placeholder', {
+const createToken = (user: User) => {
+    //@ts-ignore
+    return jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: 365 * 24 * 60 * 60
     })
 }
@@ -16,17 +17,19 @@ export const createUser = async (req: Request, res: Response) => {
         const user = User.create({email, password})
         const errors = await validate(user)
         if(errors.length > 0) {
+            
+            res.status(400).send(errors[0].constraints)
             throw new Error("Error")
         }else {
             await user.save()
-            const token = createToken(user.uuid)
-            res.cookie("jwt_cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
+            const accessToken = createToken(user)
+            res.json({ accessToken })
         }
         
         res.status(201).send("User created")
     }catch (e) {
         console.log(e.message)
-        res.status(400).send(e)
+        res.status(401).send(e)
     }
 }
 
@@ -36,14 +39,14 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
         const user = await User.onLogin(email, password)  
 
-        const token = createToken(user.uuid)
-        res.cookie("jwt_cookie", token, {httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365})
-        res.status(200).send(`${user.email} is now connected.`)
+        const accessToken = createToken(user)
+        res.json({ accessToken })
     }catch(e) {
-        res.status(400).send(e.message)
+        res.status(401).send(e.message)
     }
 }
 
-export const logoutUser = async (_: Request, res: Response) => {
-    res.clearCookie("jwt_cookie").status(200).send("Cookie cleared")
+export const logoutUser = async (req: Request, _: Response) => {
+    //@ts-ignore
+    req.user = null
 }

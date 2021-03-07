@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentOne">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/fragmentOne"
@@ -15,4 +15,14 @@
         android:name="com.ben.myshoppinglist.view.ui.fragment.FragmentTwo"
         android:label="fragment_two"
         tools:layout="@layout/fragment_two" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.ben.myshoppinglist.view.ui.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ben.myshoppinglist.view.ui.fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>
