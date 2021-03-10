@@ -34,10 +34,10 @@ export class User extends BaseEntity {
     static async onLogin(email: string, password: string) {
 
         const user = await this.findOne({ email })
-        if(!user) throw Error("Wrong email.")
+        if(!user) throw Error("The email you entered doesn't exist.")
 
         const comparePassword = await argon2.verify(user.password, password)
-        if(!comparePassword) throw Error("Wrong password.") 
+        if(!comparePassword) throw Error("The passwords did not match") 
 
         return user
     }

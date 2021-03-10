@@ -17,18 +17,15 @@ export const createUser = async (req: Request, res: Response) => {
         const user = User.create({email, password})
         const errors = await validate(user)
         if(errors.length > 0) {
-            
-            res.status(400).send(errors[0].constraints)
-            throw new Error("Error")
+            res.status(401).send(errors[0].constraints)
         }else {
             await user.save()
             const accessToken = createToken(user)
-            res.json({ accessToken })
+            res.status(201).json({ accessToken })
         }
         
         res.status(201).send("User created")
     }catch (e) {
-        console.log(e.message)
         res.status(401).send(e)
     }
 }
